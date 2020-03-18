@@ -9,7 +9,7 @@ jobs:
             MYSQL_DB: todoapp
             MYSQL_USER: root
             MYSQL_ALLOW_EMPTY_PASSWORD: true
-            MYSQL_PASSWORD:
+            MYSQL_PASSWORD: root
       - image: mysql:5.7
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
         environment:
@@ -49,7 +49,7 @@ jobs:
       - run: npm run production
       - run:
           name: Mysql database
-          command: mysql -h 127.0.0.1 -u root -e "create database todoapp;"
+          command: mysql -h 127.0.0.1 -u root -p root -e "create database todoapp;"
       - run: php artisan key:generate
       - run: php artisan migrate
       - run: php artisan passport:install
