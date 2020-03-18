@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Task;
 class TaskController extends Controller
 {
     /**
@@ -41,7 +41,15 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'text' => 'required'
+        ]);
+
+        return Task::create([
+            'text' => $request->text,
+            'user_id' => auth('api')->user()->id,
+            'is_completed' => Task::NOT_COMPLETED
+        ]);
     }
 
     /**
@@ -75,7 +83,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return tap($task)->update(request()->only(['is_completed', 'text']))->fresh();
     }
 
     /**
@@ -86,6 +94,8 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $task->delete();
+
+        return response()->json(['message' => 'Task deleted'], 200);
     }
 }
