@@ -3,11 +3,11 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/php:7.1-node-browsers
+      - image: circleci/php:7.3.8-zts
         environment:
             MYSQL_HOST: 127.0.0.1
             MYSQL_DB: todoapp_test
-            MYSQL_USER: todoapp_test
+            MYSQL_USER: root
             MYSQL_ALLOW_EMPTY_PASSWORD: true
             MYSQL_PASSWORD: 111111
       - image: mysql:5.7
@@ -23,7 +23,7 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt-get upgrade
       - run: sudo apt install -y libsqlite3-dev zlib1g-dev
-      - run: sudo apt install -y mysql-client
+    #   - run: sudo apt install -y mysql-client
       - run: sudo docker-php-ext-install zip
       - run: sudo docker-php-ext-install pdo_mysql
       - run: sudo composer self-update
