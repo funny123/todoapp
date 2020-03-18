@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/php:7.3.8-zts
+      - image: circleci/php:7.1-node-browsers
         environment:
             MYSQL_HOST: 127.0.0.1
             MYSQL_DB: todoapp_test
@@ -20,13 +20,8 @@ jobs:
 
     steps:
       - checkout
-      - run: sudo apt-get update
-      - run: sudo apt-get upgrade
-      - run: sudo apt install -y libsqlite3-dev zlib1g-dev
-    #   - run: sudo apt install -y mysql-client
+      - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
       - run: sudo docker-php-ext-install zip
-      - run: sudo docker-php-ext-install pdo_mysql
-      - run: sudo composer self-update
       - restore_cache:
           keys:
               - composer-v1-{{ checksum "composer.lock" }}
