@@ -6,7 +6,7 @@ jobs:
       - image: circleci/php:7.1-node-browsers
         environment:
             MYSQL_HOST: 127.0.0.1
-            MYSQL_DB: todoapp_test
+            MYSQL_DB: todoapp
             MYSQL_USER: root
             MYSQL_ALLOW_EMPTY_PASSWORD: true
             MYSQL_PASSWORD:
@@ -20,10 +20,8 @@ jobs:
 
     steps:
       - checkout
-      - run: sudo apt-get update
-      - run: sudo apt-get upgrade
       - run: sudo apt install -y libsqlite3-dev zlib1g-dev
-      - run: sudo apt install mariadb-client-core-10.3
+      - run: sudo apt install -y mariadb-client-core-10.3
       - run: sudo docker-php-ext-install zip
       - run: sudo docker-php-ext-install pdo_mysql
       - run: sudo composer self-update
@@ -50,8 +48,7 @@ jobs:
       - run: npm run production
       - run:
           name: Mysql database
-          command: mysql -h 127.0.0.1 -u root -e "create database todoapp_test;"
-        #   command: "use todoapp_test;"
+          command: mysql -h 127.0.0.1 -u root -e "create database todoapp;"
       - run: php artisan key:generate
       - run: php artisan migrate
       - run: php artisan passport:install
