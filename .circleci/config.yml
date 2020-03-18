@@ -20,8 +20,8 @@ jobs:
 
     steps:
       - checkout
-      - run: sudo apt-get install update
-      - run: sudo apt-get install upgrade
+      - run: sudo apt-get update
+      - run: sudo apt-get upgrade
       - run: sudo apt install -y libsqlite3-dev zlib1g-dev
       - run: sudo apt install mysql-client
       - run: sudo docker-php-ext-install zip
