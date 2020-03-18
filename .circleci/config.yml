@@ -51,7 +51,7 @@ jobs:
       - run:
           name: Mysql database
           command: mysql -h 127.0.0.1 -u root -e "create database todoapp_test;"
-          command: use todoapp_test
+          command: mysql -h 127.0.0.1 -u root -e "use todoapp_test;"
       - run: php artisan key:generate
       - run: php artisan migrate
       - run: php artisan passport:install
