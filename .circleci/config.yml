@@ -7,9 +7,9 @@ jobs:
         environment:
             MYSQL_HOST: 127.0.0.1
             MYSQL_DB: todoapp_test
-            MYSQL_USER: todoapp_test
+            MYSQL_USER: root
             MYSQL_ALLOW_EMPTY_PASSWORD: true
-            MYSQL_PASSWORD: 111111
+            MYSQL_PASSWORD:
       - image: mysql:5.7
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
         environment:
