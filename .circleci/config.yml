@@ -5,60 +5,40 @@ jobs:
     docker:
       - image: circleci/php:7.1-node-browsers
         environment:
-            MYSQL_HOST: 127.0.0.1
-            MYSQL_DB: todoapp_test
-            MYSQL_USER: root
-            MYSQL_ALLOW_EMPTY_PASSWORD: true
-            MYSQL_PASSWORD: 111111
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_DB: mate
+          MYSQL_USER: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_PASSWORD:
       - image: mysql:5.7
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
         environment:
-            MYSQL_USER: root
-            MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_USER: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
 
     working_directory: ~/todoapp
 
     steps:
       - checkout
-      - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
+      - run: sudo apt install -y libsqlite3-dev zlib1g-dev
       - run: sudo docker-php-ext-install zip
-    #   - run: sudo apt-get install mysql-client
+      - run: sudo composer self-update
       - restore_cache:
           keys:
-              - composer-v1-{{ checksum "composer.lock" }}
-              - composer-v1-
-      - run: mv .env.testing .env
-      - run: composer install -n --ignore-platform-reqs
+            - composer-v1-{{ checksum "composer.lock" }}
+            - composer-v1-
+      - run: composer install --dev --ignore-platform-reqs
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
           paths:
-              - vendor
-      - restore_cache: # special step to restore the dependency cache if `package.json` does not change
-          keys:
-              - node-v1-{{ checksum "package.json" }}
-              # fallback to using the latest cache if no exact match is found (See https://circleci.com/docs/2.0/caching/)
-              - node-v1-
-      - run: npm install
-      - save_cache: # special step to save the dependency cache with the `package.json` cache key template
-          key: node-v1-{{ checksum "package.json" }}
-          paths:
-              - node_modules
-      - run: npm run production
+            - vendor
       - run:
           name: Mysql database
-          command: mysql -h 127.0.0.1 -u root -e "create database todoapp_test;"
+          command: mysql  -h 127.0.0.1 -u root -e "create database mate;"
+      - run: cp .env.testing .env
       - run: php artisan key:generate
       - run: php artisan migrate
-      - run: php artisan passport:install
-      - run:
-          name: Run Laravel Server
-          command: php artisan serve
-          background: true
-      - run: vendor/bin/phpunit
-      - run:
-          name: Start Chrome Driver
-          command: ./vendor/laravel/dusk/bin/chromedriver-linux
-          background: true
-      - run:
-          name: Run Laravel Dusk Tests
-          command: php artisan dusk
+      - run: mkdir -p build/logs
+      - run: php vendor/bin/phpunit tests/ --coverage-clover build/logs/clover.xml
+      - run: php vendor/bin/phpcbf --standard=ruleset.xml app/
+      - run: php vendor/bin/phpcs --standard=ruleset.xml app/
