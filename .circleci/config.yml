@@ -20,6 +20,7 @@ jobs:
 
     steps:
       - checkout
+      - run: sudo apt-get update
       - run: sudo apt install -y libsqlite3-dev zlib1g-dev
       - run: sudo apt install mariadb-client-core-10.3
       - run: sudo docker-php-ext-install zip
